@@ -22,16 +22,19 @@ void binary_to_packet(struct Packet *packet, unsigned int binary) {
     packet->plug = binary & 0x3;
 }
 
-void printBinary(int num, int digits) {
+void btoa(int num, char *buf, int digits) {
     int shift = digits - 1;
     int current = pow(2, shift);
 
+    char digit[2];
+
     while (current > 0) {
-        printf("%d", ((num & current) >> shift) & 1);
+        sprintf(digit, "%d", ((num & current) >> shift) & 1);
+        strncat(buf, digit, 1);
 
         shift--;
         current /= 2;
     }
 
-    printf("\n");
+    strcat(buf, "\0");
 }
