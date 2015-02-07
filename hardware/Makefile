@@ -7,6 +7,8 @@ FUSES      = -U lfuse:w:0x62:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 AVRDUDE = avrdude -c $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Werror -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
+.PHONY: all flash fuse install clean
+
 all: main.hex
 
 .c.o:
