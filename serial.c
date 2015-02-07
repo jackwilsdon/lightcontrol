@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "serial.h"
-#include "packet.h"
+#include "hardware/packet.h"
 
 #ifdef _WIN32
 

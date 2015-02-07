@@ -1,4 +1,4 @@
-#include "packet.h"
+#include "hardware/packet.h"
 #include "serial.h"
 
 void btoa(int num, char *buf, int digits) {

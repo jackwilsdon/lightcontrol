@@ -1,7 +1,7 @@
 #ifndef _SERIAL_H_
 #define _SERIAL_H_
 
-#include "packet.h"
+#include "hardware/packet.h"
 
 #define SERIAL_SUCCESS 1
 #define SERIAL_ERROR !SERIAL_SUCCESS
