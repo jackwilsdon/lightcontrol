@@ -1,26 +1,5 @@
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-
-struct Packet {
-    unsigned int status: 1;
-    unsigned int group: 2;
-    unsigned int plug: 2;
-};
-
-unsigned int packet_to_binary(struct Packet packet) {
-    unsigned int binary = (packet.status << 7);
-    binary |= ((packet.group & 0x3) << 2);
-    binary |= (packet.plug  & 0x3);
-
-    return binary & 0xFF;
-}
-
-void binary_to_packet(struct Packet *packet, unsigned int binary) {
-    packet->status = (binary >> 7);
-    packet->group = (binary >> 2) & 0x3;
-    packet->plug = binary & 0x3;
-}
+#include "packet.h"
+#include "serial.h"
 
 void btoa(int num, char *buf, int digits) {
     int shift = digits - 1;
@@ -38,3 +17,29 @@ void btoa(int num, char *buf, int digits) {
 
     strcat(buf, "\0");
 }
+
+int main(int argc, char *argv[]) {
+    // 0: device
+    // 1: group
+    // 2: plug
+    // 3: status
+
+    char device[] = "\\\\.\\\\COM5";
+
+    if (serial_connect(device) == SERIAL_ERROR) {
+        printf("Failed to connect to serial device \"%s\"\n", device);
+        return 1;
+    }
+
+    struct Packet packet = { 0, 0, 0 };
+
+    if (serial_transmit(packet) == SERIAL_ERROR) {
+        printf("Failed to send data to serial device \"%s\"\n", device);
+        return 1;
+    }
+
+    serial_close(device);
+
+    return 0;
+}
+
