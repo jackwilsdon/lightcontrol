@@ -9,7 +9,7 @@ all: control
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf control $(OBJ)
 
 control: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
