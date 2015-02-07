@@ -4,7 +4,7 @@
 #include "hardware/packet.h"
 
 #define SERIAL_SUCCESS 1
-#define SERIAL_ERROR !SERIAL_SUCCESS
+#define SERIAL_ERROR (!SERIAL_SUCCESS)
 
 unsigned int serial_connect(char device[]);
 unsigned int serial_transmit(struct Packet packet);
