@@ -52,11 +52,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    struct Packet packet;
-
-    packet.group = group - 1;
-    packet.plug = plug - 1;
-    packet.status = status;
+    struct Packet packet = { status, group - 1, plug - 1 };
 
     if (serial_transmit(packet) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);
