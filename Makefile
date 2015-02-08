@@ -7,12 +7,14 @@ OBJ    = control.o serial.o packet.o
 
 all: clean control
 
-bin/%.o: src/%.c
+bin/%.o: src/%.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
 	rm -rf bin $(OBJ)
 
-control: $(addprefix bin/, $(OBJ))
-	mkdir bin
+control: $(addprefix bin/, $(OBJ)) | bin
 	gcc -o bin/$@ $^ $(CFLAGS)
+
+bin:
+	mkdir -p bin
