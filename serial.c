@@ -25,7 +25,7 @@ unsigned int serial_connect(char device[]) {
         return SERIAL_ERROR;
     }
 
-    serialParameters.BaudRate = CBR_2400;
+    serialParameters.BaudRate = CBR_9600;
     serialParameters.ByteSize = 8;
     serialParameters.StopBits = ONESTOPBIT;
     serialParameters.Parity = NOPARITY;
