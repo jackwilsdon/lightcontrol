@@ -75,6 +75,7 @@ unsigned int serial_close() {
 
 #elif __linux
 
+#include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
 
