@@ -34,6 +34,7 @@ int main(void) {
 
             binary_to_packet(&packet, softuart_getchar());
 
+            // handle the packet
             if (packet.status) {
                 rcswitch_switch_on(packet.group + 1, packet.plug + 1);
             } else {
