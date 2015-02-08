@@ -7,7 +7,7 @@
 
 #define PIN_RC PB2
 
-#include "deps/rcswitch/softuart.h"
+#include "deps/softuart/softuart.h"
 #include "packet.h"
 
 int main(void) {
