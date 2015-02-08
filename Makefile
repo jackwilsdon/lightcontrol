@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
 OBJ    = control.o serial.o packet.o
 
-.PHONY: all clean install hardware bin
+.PHONY: all clean install uninstall hardware bin
 
 all: clean control
 
@@ -13,12 +13,18 @@ bin/%.o: src/%.c | bin
 clean:
 	rm -rf bin $(OBJ)
 
-
 install: control
 ifeq ($(OS), Windows_NT)
-	$(error "Install not supported on Windows")
+	$(error Not supported on Windows)
 else
 	install -m 755 bin/control /usr/local/bin
+endif
+
+uninstall:
+ifeq ($(OS), Windows_NT)
+	$(error Not supported on Windows)
+else
+	rm /usr/local/bin/control
 endif
 
 control: $(addprefix bin/, $(OBJ)) | bin
