@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
 OBJ    = control.o serial.o packet.o
 
-.PHONY: all clean
+.PHONY: all clean hardware bin
 
 all: clean control
 
@@ -15,6 +15,9 @@ clean:
 
 control: $(addprefix bin/, $(OBJ)) | bin
 	gcc -o bin/$@ $^ $(CFLAGS)
+
+hardware:
+	cd hardware && make all
 
 bin:
 	mkdir -p bin
