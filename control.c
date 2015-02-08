@@ -1,23 +1,6 @@
 #include "hardware/packet.h"
 #include "serial.h"
 
-void btoa(int num, char *buf, int digits) {
-    int shift = digits - 1;
-    int current = pow(2, shift);
-
-    char digit[2];
-
-    while (current > 0) {
-        sprintf(digit, "%d", ((num & current) >> shift) & 1);
-        strncat(buf, digit, 1);
-
-        shift--;
-        current /= 2;
-    }
-
-    strcat(buf, "\0");
-}
-
 int getvalue(char *text, char *name, int min, int max) {
     char *end;
 
