@@ -31,14 +31,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    struct Packet packet = { 0, 0, 0 };
+    struct Packet packet = { 1, 0, 3 };
 
     if (serial_transmit(packet) == SERIAL_ERROR) {
         printf("Failed to send data to serial device \"%s\"\n", device);
         return 1;
     }
 
-    serial_close(device);
+    serial_close();
 
     return 0;
 }
