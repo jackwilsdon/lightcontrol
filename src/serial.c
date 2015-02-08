@@ -75,16 +75,64 @@ unsigned int serial_close() {
 
 #elif __linux
 
+#include <unistd.h>
+#include <termios.h>
+
+int fd = -1;
+
 unsigned int serial_connect(char *name) {
-    return SERIAL_ERROR;
+    fd = open(name, O_WRONLY | O_NOCTTY | O_SYNC);
+
+    if (fd < 0) {
+        return SERIAL_ERROR;
+    }
+
+    struct termios tty = {0};
+
+    if (tcgetattr(fd, &tty) != 0) {
+        close(fd);
+
+        return SERIAL_ERROR;
+    }
+
+    if (cfsetspeed(&tty, B9600) != 0) {
+        close(fd);
+
+        return SERIAL_ERROR;
+    }
+
+    tty.c_cflag &= ~(CSIZE | CREAD | PARENB);
+    tty.c_cflag |= (CS8 | CLOCAL);
+
+    tty.c_oflag = 0;
+
+    if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+        close(fd);
+
+        return SERIAL_ERROR;
+    }
+
+    return SERIAL_SUCCESS;
 }
 
 unsigned int serial_transmit(struct Packet packet) {
-    return SERIAL_ERROR;
+    char bytes[] = { packet_to_binary(packet) };
+
+    if (write(fd, bytes, 1) != 1) {
+        close(fd);
+
+        return SERIAL_ERROR;
+    }
+
+    return SERIAL_SUCCESS;
 }
 
 unsigned int serial_close() {
-    return SERIAL_ERROR;
+    if (close(fd) != 0) {
+        return SERIAL_ERROR;
+    }
+
+    return SERIAL_SUCCESS;
 }
 
 #else
