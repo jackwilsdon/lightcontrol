@@ -1,8 +1,8 @@
 DEVICE     = attiny85
-CLOCK      = 1000000
+CLOCK      = 8000000
 PROGRAMMER = usbasp
-OBJECTS    = main.o softuart.o
-FUSES      = -U lfuse:w:0x62:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
+OBJECTS    = main.o packet.o deps/util.o deps/softuart.o deps/rcswitch.o
+FUSES      = -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 
 AVRDUDE = avrdude -c $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Werror -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
