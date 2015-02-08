@@ -1,14 +1,11 @@
 #include <avr/io.h>
-#include <util/delay.h>
 #include <avr/interrupt.h>
 
-#include "deps/util.h"
 #include "deps/rcswitch/rcswitch.h"
-
-#define PIN_RC PB2
-
 #include "deps/softuart/softuart.h"
 #include "packet.h"
+
+#define PIN_RC PB2
 
 int main(void) {
     // initialize serial
