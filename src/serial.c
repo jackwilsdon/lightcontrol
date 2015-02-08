@@ -73,7 +73,7 @@ unsigned int serial_close() {
     return SERIAL_SUCCESS;
 }
 
-#elif __linux
+#elif defined(__linux__)
 
 #include <fcntl.h>
 #include <unistd.h>
