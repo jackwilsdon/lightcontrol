@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "hardware/packet.h"
 #include "serial.h"
 
