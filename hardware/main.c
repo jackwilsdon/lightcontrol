@@ -2,50 +2,44 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#include "softuart.h"
+#include "deps/util.h"
+#include "deps/rcswitch.h"
 
-#define PIN_LED PB3
+#define PIN_RC PB2
 
-#define DELAY_MS 100
+#include "deps/softuart.h"
+#include "packet.h"
 
-#define DIGITAL_WRITE_H(port, pin) port |= (1 << pin)
-#define DIGITAL_WRITE_L(port, pin) port &= ~(1 << pin)
-
-#define ESC \x27
-
-void long_delay_ms(uint16_t ms) {
-    for (ms /= 10; ms > 0; ms--) _delay_ms(10);
-}
-
-// program entry point
 int main(void) {
+    // initialize serial
     softuart_init();
 
     // enable interrupts
     sei();
 
-    // clear terminal
-    softuart_puts("\x1B\x63");
+    delay_ms(1000);
 
-    DDRB |= (1 << PIN_LED);
+    softuart_puts("Starting...\r\n");
 
-    DIGITAL_WRITE_L(PORTB, PIN_LED);
+    // enable the rc switch
+    rcswitch_enable(PIN_RC);
 
     while (1) {
 
+        // if there is some data waiting for us
         if (softuart_kbhit()) {
-            softuart_getchar();
 
-            DIGITAL_WRITE_H(PORTB, PIN_LED);
+            // parse the data
+            struct Packet packet;
 
-            long_delay_ms(200);
+            binary_to_packet(&packet, softuart_getchar());
 
-            DIGITAL_WRITE_L(PORTB, PIN_LED);
-
-            long_delay_ms(200);
+            if (packet.status) {
+                rcswitch_switch_on(packet.group + 1, packet.plug + 1);
+            } else {
+                rcswitch_switch_off(packet.group + 1, packet.plug + 1);
+            }
         }
-
-        long_delay_ms(DELAY_MS);
     }
 
     return 0;
