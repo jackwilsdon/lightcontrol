@@ -1,5 +1,5 @@
 #include "serial.h"
-#include "hardware/packet.h"
+#include "packet.h"
 
 #ifdef _WIN32
 

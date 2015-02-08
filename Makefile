@@ -1,18 +1,18 @@
 CC     = gcc
 CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
-OBJ    = control.o serial.o hardware/packet.o
+OBJ    = control.o serial.o packet.o
 
 .PHONY: all clean
 
 all: clean control
 
-%.o: %.c $(DEPS)
+bin/%.o: src/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
 	rm -rf bin $(OBJ)
 
-control: $(OBJ)
+control: $(addprefix bin/, $(OBJ))
 	mkdir bin
 	gcc -o bin/$@ $^ $(CFLAGS)

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "hardware/packet.h"
+#include "packet.h"
 #include "serial.h"
 
 int getvalue(char *text, char *name, int min, int max) {
