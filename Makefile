@@ -11,7 +11,8 @@ all: clean control
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
-	rm -rf control $(OBJ)
+	rm -rf bin $(OBJ)
 
 control: $(OBJ)
-	gcc -o $@ $^ $(CFLAGS)
+	mkdir bin
+	gcc -o bin/$@ $^ $(CFLAGS)
