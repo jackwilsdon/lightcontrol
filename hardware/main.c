@@ -3,11 +3,11 @@
 #include <avr/interrupt.h>
 
 #include "deps/util.h"
-#include "deps/rcswitch.h"
+#include "deps/rcswitch/rcswitch.h"
 
 #define PIN_RC PB2
 
-#include "deps/softuart.h"
+#include "deps/rcswitch/softuart.h"
 #include "packet.h"
 
 int main(void) {
