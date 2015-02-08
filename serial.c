@@ -1,10 +1,10 @@
-#include <windows.h>
-#include <stdlib.h>
-
 #include "serial.h"
 #include "hardware/packet.h"
 
 #ifdef _WIN32
+
+#include <windows.h>
+#include <stdlib.h>
 
 HANDLE serialHandle;
 DCB serialParameters = {0};
