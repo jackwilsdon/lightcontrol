@@ -17,10 +17,6 @@ int main(void) {
     // enable interrupts
     sei();
 
-    delay_ms(1000);
-
-    softuart_puts("Starting...\r\n");
-
     // enable the rc switch
     rcswitch_enable(PIN_RC);
 
