@@ -1,5 +1,5 @@
 CC     = gcc
-CGLAGS = -Wall -Werror
+CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
 OBJ    = control.o serial.o hardware/packet.o
 
