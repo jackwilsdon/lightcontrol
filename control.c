@@ -37,17 +37,44 @@ int main(int argc, char *argv[]) {
     // 2: plug
     // 3: status
 
-    char device[] = "\\\\.\\\\COM5";
-
-    if (serial_connect(device) == SERIAL_ERROR) {
-        printf("Failed to connect to serial device \"%s\"\n", device);
+    if (argc != 5) {
+        fprintf(stderr, "Usage: %s device group plug status\n", argv[0]);
         return 1;
     }
 
-    struct Packet packet = { 1, 0, 3 };
+    char *device = argv[1];
+
+    int group = getvalue(argv[2], "group", 1, 4);
+
+    if (group == -1) {
+        return 1;
+    }
+
+    int plug = getvalue(argv[3], "plug", 1, 4);
+
+    if (plug == -1) {
+        return 1;
+    }
+
+    int status = getvalue(argv[4], "status", 0, 1);
+
+    if (status == -1) {
+        return 1;
+    }
+
+    if (serial_connect(device) == SERIAL_ERROR) {
+        fprintf(stderr, "Failed to connect to serial device \"%s\".\n", device);
+        return 1;
+    }
+
+    struct Packet packet;
+
+    packet.group = group - 1;
+    packet.plug = plug - 1;
+    packet.status = status;
 
     if (serial_transmit(packet) == SERIAL_ERROR) {
-        printf("Failed to send data to serial device \"%s\"\n", device);
+        fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);
         return 1;
     }
 
