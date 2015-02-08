@@ -18,6 +18,19 @@ void btoa(int num, char *buf, int digits) {
     strcat(buf, "\0");
 }
 
+int getvalue(char *text, char *name, int min, int max) {
+    char *end;
+
+    long result = strtol(text, &end, 10);
+
+    if (*end != '\0' || result < min || result > max) {
+        fprintf(stderr, "Invalid value for %s.\n", name);
+        return -1;
+    }
+
+    return result;
+}
+
 int main(int argc, char *argv[]) {
     // 0: device
     // 1: group
