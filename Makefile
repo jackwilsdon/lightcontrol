@@ -5,7 +5,7 @@ OBJ    = control.o serial.o packet.o
 
 .PHONY: all clean install uninstall hardware bin
 
-all: clean control
+all: control
 
 bin/%.o: src/%.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
