@@ -129,51 +129,25 @@ void rcswitch_send0() {
     rcswitch_transmit(1, 3);
 }
 
-/**
- * Sends a "1" Bit
- *                       ___
- * Waveform Protocol 1: |   |_
- */
 void rcswitch_send1() {
     rcswitch_transmit(3, 1);
 }
 
-
-/**
- * Sends a Tri-State "0" Bit
- *            _     _
- * Waveform: | |___| |___
- */
 void rcswitch_sendT0() {
     rcswitch_send0();
     rcswitch_send0();
 }
 
-/**
- * Sends a Tri-State "1" Bit
- *            ___   ___
- * Waveform: |   |_|   |_
- */
 void rcswitch_sendT1() {
     rcswitch_send1();
     rcswitch_send1();
 }
 
-/**
- * Sends a Tri-State "F" Bit
- *            _     ___
- * Waveform: | |___|   |_
- */
 void rcswitch_sendTF() {
     rcswitch_send0();
     rcswitch_send1();
 }
 
-/**
- * Sends a "Sync" Bit
- *                       _
- * Waveform Protocol 1: | |_______________________________
- */
 void rcswitch_send_sync() {
     rcswitch_transmit(1, 31);
 }
