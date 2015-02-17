@@ -30,7 +30,7 @@
 #include <avr/io.h>
 
 #include "rcswitch.h"
-#include "util.h"
+#include "../util.h"
 
 int transmitterPin = -1;
 int pulseLength = 350;
