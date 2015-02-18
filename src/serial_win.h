@@ -22,7 +22,7 @@
 #include "packet.h"
 
 unsigned int win_serial_connect(char device[]);
-unsigned int win_serial_transmit(struct Packet packet);
+unsigned int win_serial_transmit(packet_t packet);
 unsigned int win_serial_close();
 
 #endif

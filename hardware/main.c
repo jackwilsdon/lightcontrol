@@ -41,7 +41,7 @@ int main(void) {
         if (softuart_kbhit()) {
 
             // parse the data
-            struct Packet packet;
+            packet_t packet;
 
             binary_to_packet(&packet, softuart_getchar());
 

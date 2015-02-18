@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    struct Packet packet = { status, group - 1, plug - 1 };
+    packet_t packet = { status, group - 1, plug - 1 };
 
     if (serial_transmit(packet) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);

@@ -32,7 +32,7 @@ unsigned int serial_connect(char device[]) {
 #endif
 }
 
-unsigned int serial_transmit(struct Packet packet) {
+unsigned int serial_transmit(packet_t packet) {
 #ifdef _WIN32
     return win_serial_transmit(packet);
 #elif defined(__linux__)

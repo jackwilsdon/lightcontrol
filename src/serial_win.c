@@ -69,7 +69,7 @@ unsigned int win_serial_connect(char device[]) {
     return SERIAL_SUCCESS;
 }
 
-unsigned int win_serial_transmit(struct Packet packet) {
+unsigned int win_serial_transmit(packet_t packet) {
     char bytes[] = { packet_to_binary(packet) };
 
     DWORD bytes_written;

@@ -29,7 +29,9 @@ struct Packet {
     unsigned int plug: 2;
 };
 
-unsigned int packet_to_binary(struct Packet packet);
-void binary_to_packet(struct Packet *packet, unsigned int binary);
+typedef struct Packet packet_t;
+
+unsigned int packet_to_binary(packet_t packet);
+void binary_to_packet(packet_t *packet, unsigned int binary);
 
 #endif

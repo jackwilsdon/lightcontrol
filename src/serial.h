@@ -25,7 +25,7 @@
 #define SERIAL_ERROR (!SERIAL_SUCCESS)
 
 unsigned int serial_connect(char device[]);
-unsigned int serial_transmit(struct Packet packet);
+unsigned int serial_transmit(packet_t packet);
 unsigned int serial_close();
 
 #endif

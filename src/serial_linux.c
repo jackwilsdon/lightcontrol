@@ -62,7 +62,7 @@ unsigned int linux_serial_connect(char *name) {
     return SERIAL_SUCCESS;
 }
 
-unsigned int linux_serial_transmit(struct Packet packet) {
+unsigned int linux_serial_transmit(packet_t packet) {
     char bytes[] = { packet_to_binary(packet) };
 
     if (write(fd, bytes, 1) != 1) {
