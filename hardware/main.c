@@ -22,8 +22,12 @@
 #include "deps/rcswitch/rcswitch.h"
 #include "deps/softuart/softuart.h"
 #include "packet.h"
+#include "deps/util.h"
 
 #define PIN_RC PB2
+
+#define SWITCH_DELAY 100
+#define LOOP_DELAY 10
 
 int main(void) {
     // initialize serial
@@ -51,6 +55,10 @@ int main(void) {
             } else {
                 rcswitch_switch_off(packet.group + 1, packet.plug + 1);
             }
+
+            delay_ms(SWITCH_DELAY);
+        } else {
+            delay_ms(LOOP_DELAY);
         }
     }
 
