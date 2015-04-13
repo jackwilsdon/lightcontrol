@@ -16,7 +16,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <avr/io.h>
 #include <avr/interrupt.h>
 
 #include "deps/rcswitch/rcswitch.h"
