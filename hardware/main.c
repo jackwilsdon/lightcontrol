@@ -30,6 +30,7 @@
 #define LOOP_DELAY 10
 
 int main(void) {
+
     // initialize serial
     softuart_init();
 
