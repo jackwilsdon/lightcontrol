@@ -138,7 +138,6 @@ V0.4 (10/2010)
   POSSIBILITY OF SUCH DAMAGE. */
 
 
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
