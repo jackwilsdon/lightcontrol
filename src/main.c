@@ -109,8 +109,6 @@ int main(int argc, char *argv[]) {
         case RESULT_ARG_ERROR:
             print_usage();
             return EXIT_FAILURE;
-        case RESULT_SUCCESS:
-            return EXIT_SUCCESS;
     }
 
     return EXIT_SUCCESS;
