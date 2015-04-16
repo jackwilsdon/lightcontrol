@@ -18,9 +18,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <libgen.h>
 
 #include "packet.h"
 #include "serial.h"
+
+static char *filename = "Unknown";
 
 int getvalue(char *text, char *name, int min, int max) {
     char *end;
@@ -35,14 +38,20 @@ int getvalue(char *text, char *name, int min, int max) {
     return result;
 }
 
+void print_usage() {
+    fprintf(stderr, "Usage: %s device group plug status", filename);
+}
+
 int main(int argc, char *argv[]) {
     // 0: device
     // 1: group
     // 2: plug
     // 3: status
 
+    filename = basename(argv[0]);
+
     if (argc != 5) {
-        fprintf(stderr, "Usage: %s device group plug status\n", argv[0]);
+        print_usage();
         return 1;
     }
 
