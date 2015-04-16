@@ -104,10 +104,9 @@ int main(int argc, char *argv[]) {
     int result = run(argc, argv);
 
     switch (result) {
-        case RESULT_ERROR:
-            return EXIT_FAILURE;
         case RESULT_ARG_ERROR:
             print_usage();
+        case RESULT_ERROR:
             return EXIT_FAILURE;
     }
 
