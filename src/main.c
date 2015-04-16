@@ -25,6 +25,10 @@
 
 static char *filename = "Unknown";
 
+#define RESULT_ERROR 0
+#define RESULT_ARG_ERROR 1
+#define RESULT_SUCCESS 2
+
 int getvalue(char *text, char *name, int min, int max) {
     char *end;
 
@@ -42,17 +46,14 @@ void print_usage() {
     fprintf(stderr, "Usage: %s device group plug status", filename);
 }
 
-int main(int argc, char *argv[]) {
+int run(int argc, char *argv[]) {
     // 0: device
     // 1: group
     // 2: plug
     // 3: status
 
-    filename = basename(argv[0]);
-
-    if (argc != 5) {
-        print_usage();
-        return 1;
+     if (argc != 5) {
+        return RESULT_ARG_ERROR;
     }
 
     char *device = argv[1];
@@ -60,34 +61,57 @@ int main(int argc, char *argv[]) {
     int group = getvalue(argv[2], "group", 1, 4);
 
     if (group == -1) {
-        return 1;
+        return RESULT_ARG_ERROR;
     }
 
     int plug = getvalue(argv[3], "plug", 1, 4);
 
     if (plug == -1) {
-        return 1;
+        return RESULT_ARG_ERROR;
     }
 
     int status = getvalue(argv[4], "status", 0, 1);
 
     if (status == -1) {
-        return 1;
+        return RESULT_ARG_ERROR;
     }
 
     if (serial_connect(device) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to connect to serial device \"%s\".\n", device);
-        return 1;
+        return RESULT_ERROR;
     }
 
     packet_t packet = { status, group - 1, plug - 1 };
 
     if (serial_transmit(packet) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);
-        return 1;
+        return RESULT_ERROR;
     }
 
     serial_close();
+
+    return RESULT_SUCCESS;
+}
+
+int main(int argc, char *argv[]) {
+    filename = basename(argv[0]);
+
+    if (argc != 5) {
+        print_usage();
+        return 1;
+    }
+
+    int result = run(argc, argv);
+
+    switch (result) {
+        case RESULT_ERROR:
+            return EXIT_FAILURE;
+        case RESULT_ARG_ERROR:
+            print_usage();
+            return EXIT_FAILURE;
+        case RESULT_SUCCESS:
+            return EXIT_SUCCESS;
+    }
 
     return 0;
 }
