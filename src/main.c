@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 
     if (argc != 5) {
         print_usage();
-        return 1;
+        return EXIT_FAILURE;
     }
 
     int result = run(argc, argv);
@@ -113,6 +113,6 @@ int main(int argc, char *argv[]) {
             return EXIT_SUCCESS;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
