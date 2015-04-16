@@ -27,8 +27,18 @@
 #define RESULT_ARG_ERROR 1
 #define RESULT_SUCCESS 2
 
+// The name of the current file
 static char *filename = "Unknown";
 
+// Convert a string into a number
+//  text - The string to convert
+//  name - The name of the value being converted. This is used when
+//         printing errors.
+//   min - The minimum value for the number returned. An error is
+//         thrown if the number found is less than this.
+//   max - The maximum value for the number returned. An error is
+//         thrown if the number found is greater than this.
+// Returns: The numeric value of `text` if valid, otherwise -1
 int getvalue(char *text, char *name, int min, int max) {
     char *end;
 
@@ -42,16 +52,19 @@ int getvalue(char *text, char *name, int min, int max) {
     return result;
 }
 
+// Print usage for this command
 void print_usage() {
     fprintf(stderr, "Usage: %s device group plug status\n", filename);
 }
 
+// Run the main program
+//  argc - The number of arguments provided to the program
+//  argv - The arguments for the program. Accepted in the format
+//          [0] Current filename (not used)
+//          [1] Group
+//          [2] Plug
+//          [3] Status
 int run(int argc, char *argv[]) {
-    // 0: device
-    // 1: group
-    // 2: plug
-    // 3: status
-
     if (argc != 5) {
         return RESULT_ARG_ERROR;
     }
@@ -93,6 +106,7 @@ int run(int argc, char *argv[]) {
     return RESULT_SUCCESS;
 }
 
+// Main entry point for the program
 int main(int argc, char *argv[]) {
     filename = basename(argv[0]);
 
