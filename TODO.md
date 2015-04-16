@@ -6,5 +6,5 @@
 - [ ] ~~Re-implement other rc-switch protocols~~ **Cannot be implemented due to current packet format**
   - [ ] ~~Protocol 2~~
   - [ ] ~~Protocol 3~~
-- [ ] Rewrite packet format and protocol to add error checking
+- [ ] Rewrite packet format and protocol to add error checking and support for more rc-switch protocols
 
