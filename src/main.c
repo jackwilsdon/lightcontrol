@@ -61,9 +61,10 @@ void print_usage() {
 //  argc - The number of arguments provided to the program
 //  argv - The arguments for the program. Accepted in the format
 //          [0] Current filename (not used)
-//          [1] Group
-//          [2] Plug
-//          [3] Status
+//          [1] Device
+//          [2] Group
+//          [3] Plug
+//          [4] Status
 int run(int argc, char *argv[]) {
     if (argc != 5) {
         return RESULT_ARG_ERROR;
