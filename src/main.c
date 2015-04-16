@@ -40,15 +40,20 @@ static char *filename = "Unknown";
 //         thrown if the number found is greater than this.
 // Returns: The numeric value of `text` if valid, otherwise -1
 int getvalue(char *text, char *name, int min, int max) {
+    // The first character after the number
     char *end;
 
+    // Retrieve the numeric value of the text
     long result = strtol(text, &end, 10);
 
+    // Ensure that there are no characters after the number
+    // and that the number is in the range provided
     if (*end != '\0' || result < min || result > max) {
         fprintf(stderr, "Invalid value for %s.\n", name);
         return -1;
     }
 
+    // Return the number value of the text
     return result;
 }
 
@@ -66,42 +71,55 @@ void print_usage() {
 //          [3] Plug
 //          [4] Status
 int run(int argc, char *argv[]) {
+
+    // Ensure 5 arguments have been provided
     if (argc != 5) {
         return RESULT_ARG_ERROR;
     }
 
+    // Retrieve the device from the arguments
     char *device = argv[1];
 
+    // Retrieve the group from the arguments
     int group = getvalue(argv[2], "group", 1, 4);
 
+    // If the group is invalid, return an error
     if (group == -1) {
         return RESULT_ARG_ERROR;
     }
 
+    // Retrieve the plug from the arguments
     int plug = getvalue(argv[3], "plug", 1, 4);
 
+    // If the plug is invalid, return an error
     if (plug == -1) {
         return RESULT_ARG_ERROR;
     }
 
+    // Retrieve the status from the arguments
     int status = getvalue(argv[4], "status", 0, 1);
 
+    // If the status is invalid, return an error
     if (status == -1) {
         return RESULT_ARG_ERROR;
     }
 
+    // Try and connect to the serial device
     if (serial_connect(device) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to connect to serial device \"%s\".\n", device);
         return RESULT_ERROR;
     }
 
+    // Create a packet from the provided information
     packet_t packet = { status, group - 1, plug - 1 };
 
+    // Transmit the packet
     if (serial_transmit(packet) == SERIAL_ERROR) {
         fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);
         return RESULT_ERROR;
     }
 
+    // Close the serial port
     serial_close();
 
     return RESULT_SUCCESS;
@@ -109,17 +127,23 @@ int run(int argc, char *argv[]) {
 
 // Main entry point for the program
 int main(int argc, char *argv[]) {
+
+    // Retrieve the current filename
     filename = basename(argv[0]);
 
+    // Run the main program
     int result = run(argc, argv);
 
+    // If an error occurred then return a failure status
+    // If an argument error occurred, output usage and then return a failure status
     switch (result) {
-        case RESULT_ARG_ERROR:
+        case RESULT_ARG_ERROR: // Falls through to RESULT_ERROR and returns a failure status
             print_usage();
         case RESULT_ERROR:
             return EXIT_FAILURE;
     }
 
+    // Return a success status if no errors occurred
     return EXIT_SUCCESS;
 }
 
