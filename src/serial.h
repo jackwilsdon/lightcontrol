@@ -24,8 +24,20 @@
 #define SERIAL_SUCCESS 1
 #define SERIAL_ERROR (!SERIAL_SUCCESS)
 
-unsigned int serial_connect(char device[]);
-unsigned int serial_transmit(packet_t packet);
-unsigned int serial_close();
+#ifdef _WIN32
+    #include "serial_win.h"
+
+    #define serial_connect win_serial_connect
+    #define serial_transmit win_serial_transmit
+    #define serial_close win_serial_close
+#elif defined(__linux__)
+    #include "serial_linux.h"
+
+    #define serial_connect linux_serial_connect
+    #define serial_transmit linux_serial_transmit
+    #define serial_close linux_serial_close
+#else
+#error Operating System not supported!
+#endif
 
 #endif

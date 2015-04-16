@@ -17,7 +17,7 @@
 CC     = gcc
 CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
-OBJ    = main.o serial.o serial_win.o serial_linux.o packet.o
+OBJ    = main.o serial_win.o serial_linux.o packet.o
 
 .PHONY: all clean install uninstall hardware bin
 
