@@ -43,7 +43,7 @@ int getvalue(char *text, char *name, int min, int max) {
 }
 
 void print_usage() {
-    fprintf(stderr, "Usage: %s device group plug status", filename);
+    fprintf(stderr, "Usage: %s device group plug status\n", filename);
 }
 
 int run(int argc, char *argv[]) {
