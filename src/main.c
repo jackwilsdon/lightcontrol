@@ -52,7 +52,7 @@ int run(int argc, char *argv[]) {
     // 2: plug
     // 3: status
 
-     if (argc != 5) {
+    if (argc != 5) {
         return RESULT_ARG_ERROR;
     }
 
