@@ -23,6 +23,8 @@
 #include "packet.h"
 #include "serial.h"
 
+#define BUILD_VERSION "0.0.2"
+
 #define RESULT_ERROR 0
 #define RESULT_ARG_ERROR 1
 #define RESULT_SUCCESS 2
@@ -60,6 +62,7 @@ int getvalue(char *text, char *name, int min, int max) {
 // Print usage for this command
 void print_usage() {
     fprintf(stderr, "Usage: %s device group plug status\n", filename);
+    fprintf(stdout, "lightcontrol v%s\n", BUILD_VERSION);
 }
 
 // Run the main program
