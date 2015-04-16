@@ -23,11 +23,11 @@
 #include "packet.h"
 #include "serial.h"
 
-static char *filename = "Unknown";
-
 #define RESULT_ERROR 0
 #define RESULT_ARG_ERROR 1
 #define RESULT_SUCCESS 2
+
+static char *filename = "Unknown";
 
 int getvalue(char *text, char *name, int min, int max) {
     char *end;
