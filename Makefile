@@ -17,11 +17,13 @@
 CC     = gcc
 CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
-OBJ    = main.o serial.o serial_win.o serial_linux.o packet.o
+OBJ    = main.o serial_win.o serial_linux.o packet.o
 
-.PHONY: all clean install uninstall hardware bin
+.PHONY: all build clean install uninstall hardware bin
 
-all: control
+all: build
+
+build: control
 
 bin/%.o: src/%.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -47,7 +49,7 @@ control: $(addprefix bin/, $(OBJ)) | bin
 	gcc -o bin/$@ $^ $(CFLAGS)
 
 hardware:
-	cd hardware && make all
+	cd hardware && make build
 
 bin:
 	mkdir -p bin
