@@ -49,7 +49,7 @@ control: $(addprefix bin/, $(OBJ)) | bin
 	gcc -o bin/$@ $^ $(CFLAGS)
 
 hardware:
-	cd hardware && make all
+	cd hardware && make build
 
 bin:
 	mkdir -p bin
