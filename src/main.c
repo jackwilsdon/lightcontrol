@@ -96,11 +96,6 @@ int run(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     filename = basename(argv[0]);
 
-    if (argc != 5) {
-        print_usage();
-        return EXIT_FAILURE;
-    }
-
     int result = run(argc, argv);
 
     switch (result) {
