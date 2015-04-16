@@ -1,5 +1,5 @@
 # Roadmap
-## `0.0.2`
+## ~~`0.0.2`~~
  - Add version numbers to builds
 
 ## `0.0.3`
