@@ -19,13 +19,13 @@
 #ifndef _PACKET_H_
 #define _PACKET_H_
 
-struct Packet {
+struct packet {
     unsigned int status: 1;
     unsigned int group: 2;
     unsigned int plug: 2;
 };
 
-typedef struct Packet packet_t;
+typedef struct packet packet_t;
 
 unsigned int packet_to_binary(packet_t packet);
 void binary_to_packet(packet_t *packet, unsigned int binary);
