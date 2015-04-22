@@ -23,7 +23,7 @@
 #include "packet.h"
 #include "serial.h"
 
-#define BUILD_VERSION "0.0.2"
+#define BUILD_VERSION "0.0.3"
 
 #define RESULT_ERROR 0
 #define RESULT_ARG_ERROR 1
