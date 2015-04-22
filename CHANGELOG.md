@@ -1,4 +1,8 @@
 # Changelog
+## `0.0.3`
+ - Update [ROADMAP](/ROADMAP.md) and [TODO](/TODO.md)
+ - Change name of packet struct to lowercase
+
 ## `0.0.2`
  - Created [ROADMAP](/ROADMAP.md) and [CHANGELOG](/CHANGELOG.md) documents
  - Added license headers to Makefiles
