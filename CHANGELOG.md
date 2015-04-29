@@ -1,4 +1,15 @@
 # Changelog
+## `0.0.4`
+ - Improve Makefile
+   - No longer removes obj files from the wrong directory
+   - Now relies on a variable to name the binary
+ - Update [ROADMAP](/ROADMAP.md)
+ - Rewrite command line interface
+   - Now uses `getopt`
+   - Can now set the status of entire groups
+ - Add debug serial endpoint
+   - A real device is no longer needed to test functionality
+
 ## `0.0.3`
  - Update [ROADMAP](/ROADMAP.md) and [TODO](/TODO.md)
  - Change name of packet struct to lowercase

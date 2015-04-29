@@ -16,32 +16,24 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <libgen.h>
+#include <getopt.h>
 
 #include "packet.h"
 #include "serial.h"
 
-#define BUILD_VERSION "0.0.2"
+#define BUILD_VERSION "0.0.4"
 
-#define RESULT_ERROR 0
-#define RESULT_ARG_ERROR 1
-#define RESULT_SUCCESS 2
+// The default serial device
+const char *default_device = "/dev/ttyUSB0";
 
 // The name of the current file
 static char *filename = "Unknown";
 
-// Convert a string into a number
-//  text - The string to convert
-//  name - The name of the value being converted. This is used when
-//         printing errors.
-//   min - The minimum value for the number returned. An error is
-//         thrown if the number found is less than this.
-//   max - The maximum value for the number returned. An error is
-//         thrown if the number found is greater than this.
-// Returns: The numeric value of `text` if valid, otherwise -1
-int getvalue(char *text, char *name, int min, int max) {
+int getvalue(char *text, int *value) {
     // The first character after the number
     char *end;
 
@@ -49,104 +41,232 @@ int getvalue(char *text, char *name, int min, int max) {
     long result = strtol(text, &end, 10);
 
     // Ensure that there are no characters after the number
-    // and that the number is in the range provided
-    if (*end != '\0' || result < min || result > max) {
-        fprintf(stderr, "Invalid value for %s.\n", name);
+    if (*end != '\0') {
+        *value = 0;
+
+        // Return a failure
         return -1;
     }
 
     // Return the number value of the text
-    return result;
+    *value = result;
+
+    // Return a success
+    return 0;
 }
 
 // Print usage for this command
 void print_usage() {
-    fprintf(stderr, "Usage: %s device group plug status\n", filename);
-    fprintf(stdout, "lightcontrol v%s\n", BUILD_VERSION);
+    printf("Usage: %s [OPTIONS] [PLUG] GROUP STATUS\n", filename);
+    printf("  -d, --device device       device to control\n");
+    printf("                              defaults to %s\n", default_device);
+    printf("  -h, --help                display this help and exit\n");
+    printf("\n");
+    printf("lightcontrol v%s\n", BUILD_VERSION);
 }
 
-// Run the main program
-//  argc - The number of arguments provided to the program
-//  argv - The arguments for the program. Accepted in the format
-//          [0] Current filename (not used)
-//          [1] Device
-//          [2] Group
-//          [3] Plug
-//          [4] Status
-int run(int argc, char *argv[]) {
-
-    // Ensure 5 arguments have been provided
-    if (argc != 5) {
-        return RESULT_ARG_ERROR;
-    }
-
-    // Retrieve the device from the arguments
-    char *device = argv[1];
-
-    // Retrieve the group from the arguments
-    int group = getvalue(argv[2], "group", 1, 4);
-
-    // If the group is invalid, return an error
-    if (group == -1) {
-        return RESULT_ARG_ERROR;
-    }
-
-    // Retrieve the plug from the arguments
-    int plug = getvalue(argv[3], "plug", 1, 4);
-
-    // If the plug is invalid, return an error
-    if (plug == -1) {
-        return RESULT_ARG_ERROR;
-    }
-
-    // Retrieve the status from the arguments
-    int status = getvalue(argv[4], "status", 0, 1);
-
-    // If the status is invalid, return an error
-    if (status == -1) {
-        return RESULT_ARG_ERROR;
-    }
-
-    // Try and connect to the serial device
-    if (serial_connect(device) == SERIAL_ERROR) {
-        fprintf(stderr, "Failed to connect to serial device \"%s\".\n", device);
-        return RESULT_ERROR;
-    }
-
-    // Create a packet from the provided information
-    packet_t packet = { status, group - 1, plug - 1 };
-
-    // Transmit the packet
-    if (serial_transmit(packet) == SERIAL_ERROR) {
-        fprintf(stderr, "Failed to send data to serial device \"%s\".\n", device);
-        return RESULT_ERROR;
-    }
-
-    // Close the serial port
-    serial_close();
-
-    return RESULT_SUCCESS;
-}
-
-// Main entry point for the program
 int main(int argc, char *argv[]) {
+
+    // Current device to control
+    char *device = malloc(strlen(default_device) + 1);
+
+    // Copy default device
+    strcpy(device, default_device);
+
+    // Current option for getopt
+    int c;
+
+    // Set options for getopt
+    const char *short_options = "d:h";
+    static struct option long_options[] = {
+        { "device", optional_argument, NULL, 'd' },
+        { "help",   no_argument,       NULL, 'h' }
+    };
+
+    // Disable getopt errors
+    opterr = 0;
 
     // Retrieve the current filename
     filename = basename(argv[0]);
 
-    // Run the main program
-    int result = run(argc, argv);
+    // Iterate the provided arguments
+    while ((c = getopt_long(argc, argv, short_options, long_options, NULL)) != -1) {
+        switch (c) {
+            case 'd': // Device option
+                device = optarg;
+                break;
 
-    // If an error occurred then return a failure status
-    // If an argument error occurred, output usage and then return a failure status
-    switch (result) {
-        case RESULT_ARG_ERROR: // Falls through to RESULT_ERROR and returns a failure status
-            print_usage();
-        case RESULT_ERROR:
-            return EXIT_FAILURE;
+            case 'h': // Help option
+                print_usage();
+                return EXIT_SUCCESS;
+
+            default: // Error
+
+                // Check whether the error is a device error or not
+                switch (optopt) {
+                    case 'd': // Device error
+
+                        // Output the error
+                        fprintf(stderr, "%s: invalid device\n", filename);
+                        break;
+
+                    default: // Generic error
+
+                        // Output the error
+                        fprintf(stderr, "%s: invalid option -- %c\n", filename, optopt);
+                        fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+                        break;
+                }
+
+                // Exit with an error
+                return EXIT_FAILURE;
+        }
     }
 
-    // Return a success status if no errors occurred
+    // Current argument and start index
+    int index;
+    int start = optind;
+
+    // Command information
+    int group = -1;
+    int plug = -1;
+    int status = -1;
+
+    int error = -1;
+
+    // Iterate arguments
+    for (index = start; index < argc; index++) {
+
+        // Current argument
+        char *arg = argv[start + (argc - index - 1)];
+
+        // Get value of current argument
+        int value = 0;
+        int result = getvalue(arg, &value);
+
+        int current = index - start;
+
+        switch (current) {
+            case 0: // Status
+                if (!result && value >= 0 && value <= 1) {
+                    status = value;
+                } else {
+                    error = current;
+                }
+                break;
+
+            case 1: // Group
+                if (!result && value >= 1 && value <= 4) {
+                    group = value;
+                } else {
+                    error = current;
+                }
+                break;
+
+            case 2: // Plug
+                if (!result && value >= 1 && value <= 4) {
+                    plug = value;
+                } else {
+                    error = current;
+                }
+                break;
+
+            default: // Other
+                error = current;
+                break;
+        }
+    }
+
+    // If no error has occurred and the group is invalid
+    if (error == -1 && group == -1) {
+
+        // There is an error in the group
+        error = 1;
+    }
+
+    // Handle any errors
+    switch (error) {
+        case -1: // No error
+            break;
+
+        case 0: // Status
+            fprintf(stderr, "%s: invalid status (must be 0 or 1)\n", filename);
+            fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+            break;
+
+        case 1: // Group
+            fprintf(stderr, "%s: invalid group (must be 1 to 4)\n", filename);
+            fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+            break;
+
+        case 2: // Plug
+            fprintf(stderr, "%s: invalid plug (must be 1 to 4)\n", filename);
+            fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+            break;
+
+        default: // Other
+            fprintf(stderr, "%s: invalid usage\n", filename);
+            fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+            break;
+    }
+
+    // No error
+    if (error == -1) {
+
+        // Try to connect to the serial device
+        if (serial_connect(device) == SERIAL_ERROR) {
+            fprintf(stderr, "%s: failed to connect to serial device `%s'\n", filename, device);
+
+            // Free the device and exit
+            free(device);
+            return EXIT_FAILURE;
+        }
+
+        // Create a packet to transmit
+        packet_t packet;
+
+        // Fill the packet with the provided information
+        packet.status = status;
+        packet.group = group - 1;
+
+        int start; // The start of the plugs to be changed
+        int end;   // The end of the plugs to be changed
+        int index; // The current plug
+
+        // If no plugs were provided, change all plugs
+        if (plug == -1) {
+            start = 0;
+            end = 4;
+        } else { // Otherwise only change the provided plug
+            start = plug - 1;
+            end = plug;
+        }
+
+        // Iterate the plugs
+        for (index = start; index < end; index++) {
+
+            // Update the packet with the new plug
+            packet.plug = index;
+
+            // Transmit the packet
+            if (serial_transmit(packet) == SERIAL_ERROR) {
+                fprintf(stderr, "%s: failed to send data to serial device `%s'\n", filename, device);
+
+                // Free the device and exit
+                free(device);
+                return EXIT_FAILURE;
+            }
+        }
+
+        // Close the serial device
+        serial_close();
+    } else { // There was an error
+        return EXIT_FAILURE;
+    }
+
+    // Free the device
+    free(device);
+
+    // Exit with a success
     return EXIT_SUCCESS;
 }
-
