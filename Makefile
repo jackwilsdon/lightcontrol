@@ -30,7 +30,7 @@ bin/%.o: src/%.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 clean:
-	rm -rf bin $(OBJ)
+	rm -rf bin
 
 install: control
 ifeq ($(OS), Windows_NT)
