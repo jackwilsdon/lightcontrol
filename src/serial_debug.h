@@ -16,34 +16,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SERIAL_H_
-#define _SERIAL_H_
+#ifndef _SERIAL_DEBUG_H_
+#define _SERIAL_DEBUG_H_
 
 #include "packet.h"
 
-#define SERIAL_SUCCESS 1
-#define SERIAL_ERROR (!SERIAL_SUCCESS)
-
-#ifdef DEBUG_SERIAL
-    #include "serial_debug.h"
-
-    #define serial_connect debug_serial_connect
-    #define serial_transmit debug_serial_transmit
-    #define serial_close debug_serial_close
-#elif defined(_WIN32)
-    #include "serial_win.h"
-
-    #define serial_connect win_serial_connect
-    #define serial_transmit win_serial_transmit
-    #define serial_close win_serial_close
-#elif defined(__linux__)
-    #include "serial_linux.h"
-
-    #define serial_connect linux_serial_connect
-    #define serial_transmit linux_serial_transmit
-    #define serial_close linux_serial_close
-#else
-#error Operating System not supported!
-#endif
+unsigned int debug_serial_connect(char device[]);
+unsigned int debug_serial_transmit(packet_t packet);
+unsigned int debug_serial_close();
 
 #endif
