@@ -17,14 +17,18 @@
 CC     = gcc
 CFLAGS = -Wall -Werror
 DEPS   = serial.h hardware/packet.h
-OBJ    = main.o serial_win.o serial_linux.o packet.o
+OBJ    = main.o serial_win.o serial_linux.o serial_debug.o packet.o
 BINARY = control
 
-.PHONY: all build clean install uninstall hardware bin
+.PHONY: all build debug clean install uninstall hardware bin
 
 all: build
 
 build: control
+
+debug: CFLAGS += -DDEBUG_SERIAL
+debug: BINARY = control_debug
+debug: control
 
 bin/%.o: src/%.c | bin
 	$(CC) -c -o $@ $< $(CFLAGS)
