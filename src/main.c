@@ -16,11 +16,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <libgen.h>
 #include <getopt.h>
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "packet.h"
 #include "serial.h"
