@@ -34,6 +34,7 @@ const char *default_device = "/dev/ttyUSB0";
 static char *filename = "Unknown";
 
 int getvalue(char *text, int *value) {
+
     // The first character after the number
     char *end;
 
