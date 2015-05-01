@@ -28,7 +28,7 @@
 #define BUILD_VERSION "0.0.4"
 
 // The default serial device
-const char *default_device = "/dev/ttyUSB0";
+static const char *default_device = "/dev/ttyUSB0";
 
 // The name of the current file
 static char *filename = "Unknown";
