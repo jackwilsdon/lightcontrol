@@ -16,11 +16,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <getopt.h>
-#include <libgen.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
+#include <libgen.h>
+#include <getopt.h>
 
 #include "packet.h"
 #include "serial.h"
@@ -28,17 +27,12 @@
 #define BUILD_VERSION "0.0.4"
 
 // The default serial device
-static const char *default_device = "/dev/ttyUSB0";
+#define DEFAULT_DEVICE "/dev/ttyUSB0"
 
 // The name of the current file
 static char *filename = "Unknown";
 
-/// Convert a string to an integer
-// text - The string to convert
-// value - A pointer to the location to store the result
-/// Returns -1 if an error occurred or 0 if it succeeded
 int getvalue(char *text, int *value) {
-
     // The first character after the number
     char *end;
 
@@ -64,7 +58,7 @@ int getvalue(char *text, int *value) {
 void print_usage() {
     printf("Usage: %s [OPTIONS] [PLUG] GROUP STATUS\n", filename);
     printf("  -d, --device device       device to control\n");
-    printf("                              defaults to %s\n", default_device);
+    printf("                              defaults to %s\n", DEFAULT_DEVICE);
     printf("  -h, --help                display this help and exit\n");
     printf("\n");
     printf("lightcontrol v%s\n", BUILD_VERSION);
@@ -73,10 +67,7 @@ void print_usage() {
 int main(int argc, char *argv[]) {
 
     // Current device to control
-    char *device = malloc(strlen(default_device) + 1);
-
-    // Copy default device
-    strcpy(device, default_device);
+    char *device = DEFAULT_DEVICE;
 
     // Current option for getopt
     int c;
@@ -222,8 +213,6 @@ int main(int argc, char *argv[]) {
         if (serial_connect(device) == SERIAL_ERROR) {
             fprintf(stderr, "%s: failed to connect to serial device `%s'\n", filename, device);
 
-            // Free the device and exit
-            free(device);
             return EXIT_FAILURE;
         }
 
@@ -257,8 +246,6 @@ int main(int argc, char *argv[]) {
             if (serial_transmit(packet) == SERIAL_ERROR) {
                 fprintf(stderr, "%s: failed to send data to serial device `%s'\n", filename, device);
 
-                // Free the device and exit
-                free(device);
                 return EXIT_FAILURE;
             }
         }
@@ -268,9 +255,6 @@ int main(int argc, char *argv[]) {
     } else { // There was an error
         return EXIT_FAILURE;
     }
-
-    // Free the device
-    free(device);
 
     // Exit with a success
     return EXIT_SUCCESS;
