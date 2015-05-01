@@ -16,7 +16,6 @@
 
 CC     = gcc
 CFLAGS = -Wall -Werror
-DEPS   = serial.h hardware/packet.h
 OBJ    = main.o serial_win.o serial_linux.o serial_debug.o packet.o
 BINARY = control
 

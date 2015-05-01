@@ -16,11 +16,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <libgen.h>
 #include <getopt.h>
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "packet.h"
 #include "serial.h"
@@ -28,12 +28,17 @@
 #define BUILD_VERSION "0.0.4"
 
 // The default serial device
-const char *default_device = "/dev/ttyUSB0";
+static const char *default_device = "/dev/ttyUSB0";
 
 // The name of the current file
 static char *filename = "Unknown";
 
+/// Convert a string to an integer
+// text - The string to convert
+// value - A pointer to the location to store the result
+/// Returns -1 if an error occurred or 0 if it succeeded
 int getvalue(char *text, int *value) {
+
     // The first character after the number
     char *end;
 
