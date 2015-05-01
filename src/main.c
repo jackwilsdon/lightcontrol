@@ -33,6 +33,10 @@ const char *default_device = "/dev/ttyUSB0";
 // The name of the current file
 static char *filename = "Unknown";
 
+/// Convert a string to an integer
+// text - The string to convert
+// value - A pointer to the location to store the result
+/// Returns -1 if an error occurred or 0 if it succeeded
 int getvalue(char *text, int *value) {
 
     // The first character after the number
