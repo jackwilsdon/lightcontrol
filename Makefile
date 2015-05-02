@@ -19,7 +19,7 @@ CFLAGS = -Wall -Werror
 OBJ    = main.o serial_win.o serial_linux.o serial_debug.o packet.o
 BINARY = control
 
-.PHONY: all build debug clean install uninstall control hardware test bin
+.PHONY: all build debug clean install uninstall control test bin
 
 all: build
 
@@ -51,9 +51,6 @@ endif
 
 control: $(addprefix bin/, $(OBJ))
 	gcc -o bin/$(BINARY) $^ $(CFLAGS)
-
-hardware:
-	cd hardware && make build
 
 test:
 	make -C test build run
