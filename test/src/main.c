@@ -3,6 +3,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+#include <stdio.h>
+
 #include "../../src/packet.h"
 
 /**
@@ -21,24 +23,29 @@ static void assert_packet_equal(packet_t a, packet_t b) {
 }
 
 static void test_packet_conversion(void **state) {
-	packet_t sourcePacket;
-	packet_t destPacket;
+	packet_t sourcePacket; // The original packet
+	packet_t destPacket;   // The "cloned" packet (original->binary->this)
 
-	unsigned int binaryData;
-	int group, plug, status;
+	unsigned int binaryData; // The binary data (original->this->cloned)
+	int group, plug, status; // The group, plug and status for the current test
 
+	// Iterate all possible groups
 	for (group = 0; group < 4; group++) {
-		sourcePacket.group = group;
+		sourcePacket.group = group; // Update the source group
 
+		// Iterate all possible plugs
 		for (plug = 0; plug < 4; plug++) {
-			sourcePacket.plug = plug;
+			sourcePacket.plug = plug; // Update the source plug
 
+			// Iterate all possible statuses
 			for (status = 0; status < 2; status++) {
-				sourcePacket.status = status;
+				sourcePacket.status = status; // Update the source status
 
+				// Convert the current packet to binary and back again
 				binaryData = packet_to_binary(sourcePacket);
 				binary_to_packet(&destPacket, binaryData);
 
+				// Compare the "cloned" packet to the source packet
 				assert_packet_equal(sourcePacket, destPacket);
 			}
 		}
