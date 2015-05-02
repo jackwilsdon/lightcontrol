@@ -26,9 +26,6 @@
 
 #define BUILD_VERSION "0.0.5"
 
-// The default serial device
-#define DEFAULT_DEVICE "/dev/ttyUSB0"
-
 // The name of the current file
 static char *filename = "Unknown";
 
@@ -58,7 +55,6 @@ int getvalue(char *text, int *value) {
 void print_usage() {
     printf("Usage: %s [OPTIONS] [PLUG] GROUP STATUS\n", filename);
     printf("  -d, --device device       device to control\n");
-    printf("                              defaults to %s\n", DEFAULT_DEVICE);
     printf("  -h, --help                display this help and exit\n");
     printf("\n");
     printf("lightcontrol v%s\n", BUILD_VERSION);
@@ -67,7 +63,7 @@ void print_usage() {
 int main(int argc, char *argv[]) {
 
     // Current device to control
-    char *device = DEFAULT_DEVICE;
+    char *device = NULL;
 
     // Current option for getopt
     int c;
@@ -75,7 +71,7 @@ int main(int argc, char *argv[]) {
     // Set options for getopt
     const char *short_options = "d:h";
     static struct option long_options[] = {
-        { "device", optional_argument, NULL, 'd' },
+        { "device", required_argument, NULL, 'd' },
         { "help",   no_argument,       NULL, 'h' }
     };
 
@@ -168,13 +164,17 @@ int main(int argc, char *argv[]) {
                 break;
 
             default: // Other
-                error = current;
+                error = 4;
                 break;
         }
     }
 
-    // If no error has occurred and the group is invalid
-    if (error == -1 && group == -1) {
+    // If the device is invalid
+    if (device == NULL) {
+
+        // There is an error in the device
+        error = 3;
+    } else if (error == -1 && group == -1) { // Otherwise if there is no error and the group is invalid
 
         // There is an error in the group
         error = 1;
@@ -197,6 +197,11 @@ int main(int argc, char *argv[]) {
 
         case 2: // Plug
             fprintf(stderr, "%s: invalid plug (must be 1 to 4)\n", filename);
+            fprintf(stderr, "Try `%s --help' for more information.\n", filename);
+            break;
+
+        case 3: // Device
+            fprintf(stderr, "%s: invalid device\n", filename);
             fprintf(stderr, "Try `%s --help' for more information.\n", filename);
             break;
 
