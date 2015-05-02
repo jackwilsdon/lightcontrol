@@ -66,11 +66,21 @@ static void test_packet_conversion(void **state) {
 	}
 }
 
+/**
+ * @brief A test that will fail on purpose.
+ *
+ * Created to test out travis-ci integration.
+ */
+static void test_fail(void **state) {
+	assert_true(0); // Zero is not true
+}
+
 int main(void) {
 
 	// A list of all the tests to be done
 	const struct CMUnitTest tests[] = {
-		cmocka_unit_test(test_packet_conversion) // Packet conversion test (original->binary->cloned)
+		cmocka_unit_test(test_packet_conversion), // Packet conversion test (original->binary->cloned)
+		cmocka_unit_test(test_fail) // Fail test for travis-ci
 	};
 
 	// Run the tests and return the number of failed tests
