@@ -1,5 +1,5 @@
 # lightcontrol packet format
-A lightcontrol packet consists of 8 bits (1 byte), which is one instruction.
+A lightcontrol packet consists of 8 bits (1 byte) which counts one instruction.
 
 ## Fields
 | Field      | Offset (bits) | Size (bits) | Description             | Possible Values |
