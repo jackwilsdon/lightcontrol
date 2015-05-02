@@ -1,4 +1,11 @@
 # Changelog
+## `0.0.5`
+ - Improve code documentation
+ - Add unit test for packet parsing
+ - Add Travis CI integration
+ - Update Makefile
+ - Fix a crash when passing a device to `control`
+
 ## `0.0.4`
  - Improve Makefile
    - No longer removes obj files from the wrong directory
