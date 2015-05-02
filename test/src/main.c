@@ -66,12 +66,13 @@ static void test_packet_conversion(void **state) {
 	}
 }
 
-int main(void)
-{
-    const struct CMUnitTest tests[] =
-    {
-    	cmocka_unit_test(test_packet_conversion)
-    };
+int main(void) {
 
-    return cmocka_run_group_tests(tests, NULL, NULL);
+	// A list of all the tests to be done
+	const struct CMUnitTest tests[] = {
+		cmocka_unit_test(test_packet_conversion) // Packet conversion test (original->binary->cloned)
+	};
+
+	// Run the tests and return the number of failed tests
+	return cmocka_run_group_tests(tests, NULL, NULL);
 }
