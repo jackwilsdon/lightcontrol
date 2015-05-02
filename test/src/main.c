@@ -22,6 +22,20 @@ static void assert_packet_equal(packet_t a, packet_t b) {
 	assert_true(a.plug == b.plug);
 }
 
+/**
+ * @brief Test the conversion from packet to binary and back again.
+ *
+ * The function iterates all possible group, plug and status combinations and
+ * creates binary data from them using packet_to_binary. It then converts it
+ * back to a packet_t before comparing it with the original packet using
+ * assert_packet_equal.
+ *
+ * @param[in] state The current state. Unused by this method.
+ *
+ * @see packet_to_binary()
+ * @see binary_to_packet()
+ * @see assert_packet_equal()
+ */
 static void test_packet_conversion(void **state) {
 	packet_t sourcePacket; // The original packet
 	packet_t destPacket;   // The "cloned" packet (original->binary->this)
