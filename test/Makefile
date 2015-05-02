@@ -19,7 +19,7 @@ CFLAGS = -Wall -Werror -lcmocka
 OBJ    = src/main.o ../src/packet.o
 BINARY = test
 
-.PHONY: all build debug clean install uninstall hardware bin
+.PHONY: all build clean test run bin
 
 all: build
 
@@ -33,6 +33,9 @@ clean:
 
 test: $(OBJ) | bin
 	gcc -o bin/$(BINARY) $(addprefix bin/, $(notdir $^)) $(CFLAGS)
+
+run:
+	bin/$(BINARY)
 
 bin:
 	mkdir -p bin
