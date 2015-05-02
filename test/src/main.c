@@ -3,8 +3,6 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include <stdio.h>
-
 #include "../../src/packet.h"
 
 /**
