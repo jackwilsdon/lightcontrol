@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
             case 0: // Status
                 if (!result && value >= 0 && value <= 1) {
                     status = value;
-                } else {
+                } else if (error == -1) {
                     error = current;
                 }
                 break;
@@ -154,7 +154,7 @@ int main(int argc, char *argv[]) {
             case 1: // Group
                 if (!result && value >= 1 && value <= 4) {
                     group = value;
-                } else {
+                } else if (error == -1) {
                     error = current;
                 }
                 break;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
             case 2: // Plug
                 if (!result && value >= 1 && value <= 4) {
                     plug = value;
-                } else {
+                } else if (error == -1) {
                     error = current;
                 }
                 break;
