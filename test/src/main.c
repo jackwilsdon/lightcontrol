@@ -13,6 +13,8 @@
  *
  * @param[in] a The first packet to compare.
  * @param[in] b The packet to compare against the first one.
+ *
+ * @see assert_true()
  */
 static void assert_packet_equal(packet_t a, packet_t b) {
 	assert_true(a.status == b.status);
