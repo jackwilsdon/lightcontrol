@@ -19,7 +19,7 @@ CFLAGS = -Wall -Werror
 OBJ    = main.o serial_win.o serial_linux.o serial_debug.o packet.o
 BINARY = control
 
-.PHONY: all build debug clean install uninstall hardware bin
+.PHONY: all build debug clean install uninstall control hardware bin
 
 all: build
 
