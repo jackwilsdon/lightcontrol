@@ -24,7 +24,7 @@
 #include "packet.h"
 #include "serial.h"
 
-#define BUILD_VERSION "0.0.4"
+#define BUILD_VERSION "0.0.5"
 
 // The default serial device
 #define DEFAULT_DEVICE "/dev/ttyUSB0"
