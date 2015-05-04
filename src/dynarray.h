@@ -169,6 +169,8 @@ unsigned int dynarray_remove(dynarray_t *array, int index);
  *  - Sets the size of the array to zero.
  *
  * @param[in,out] array The array to free.
+ * @return @ref DYNARRAY_SUCCESS if the array was freed successfully,
+ *         @ref DYNARRAY_ERROR otherwise.
  */
 unsigned int dynarray_free(dynarray_t *array);
 
