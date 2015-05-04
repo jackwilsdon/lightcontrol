@@ -206,10 +206,6 @@ int main(void) {
 	// A list of tests to be done
 	const struct CMUnitTest tests[] = {
 		cmocka_unit_test(test_packet_conversion), // Packet conversion test (original->binary->cloned)
-	};
-
-	// A list of dynarray tests to be done
-	const struct CMUnitTest dynarray_tests[] = {
 		TEST_DYNARRAY(test_dynarray_init),
 		TEST_DYNARRAY(test_dynarray_size),
 		TEST_DYNARRAY(test_dynarray_add),
@@ -220,11 +216,6 @@ int main(void) {
 		TEST_DYNARRAY(test_dynarray_free)
 	};
 
-	// Run the tests and store the number of failed tests
-	int failed = cmocka_run_group_tests(tests, NULL, NULL);
-
-	// Run the dynarray tests and store the number of failed tests
-	int dynarray_failed = cmocka_run_group_tests(dynarray_tests, NULL, NULL);
-
-	return (failed + dynarray_failed);
+	// Run the tests and return the number of failed tests
+	return cmocka_run_group_tests(tests, NULL, NULL);
 }
