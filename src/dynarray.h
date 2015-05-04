@@ -83,6 +83,8 @@ typedef struct dynarray dynarray_t;
  *
  * @param[in,out] array The array to initialize.
  * @param[in] initial_capacity The initial capacity of the array.
+ * @return @ref DYNARRAY_SUCCESS if the array was initialized successfully,
+ *         @ref DYNARRAY_ERROR otherwise.
  */
 unsigned int dynarray_init(dynarray_t *array, int initial_capacity);
 
