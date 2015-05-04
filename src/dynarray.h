@@ -25,6 +25,7 @@
 
 /**
  * @defgroup dynarray Dynamically Sized Arrays
+ * @brief Simple dynamically sized arrays.
  * @{
  */
 
