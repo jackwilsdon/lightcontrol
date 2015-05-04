@@ -247,14 +247,14 @@ static void test_keyvalue_add_pair(void **state) {
 	keyvalue_set_t *set = *state;
 	dynarray_t *array = set->array;
 
-	keyvalue_pair_t pair;
+	keyvalue_pair_t *pair = malloc(sizeof(keyvalue_pair_t));
 
-	pair.key = "hello";
-	pair.value = "world";
+	pair->key = "hello";
+	pair->value = "world";
 
-	assert_true(keyvalue_add_pair(set, &pair) == KEYVALUE_SUCCESS);
+	assert_true(keyvalue_add_pair(set, pair) == KEYVALUE_SUCCESS);
 	assert_int_equal(array->size, 1);
-	assert_int_equal(array->data[0], &pair);
+	assert_int_equal(array->data[0], pair);
 }
 
 static void test_keyvalue_add(void **state) {
