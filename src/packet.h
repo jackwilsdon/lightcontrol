@@ -19,15 +19,60 @@
 #ifndef _PACKET_H_
 #define _PACKET_H_
 
+/**
+ * @defgroup packet Control Packets
+ * @brief Light control packets.
+ * @{
+ */
+
+/**
+ * @brief Represents a control packet.
+ */
 struct packet {
+
+    /**
+     * @brief The status for the plug.
+     */
     unsigned int status: 1;
+
+    /**
+     * @brief The group of the plug.
+     */
     unsigned int group: 2;
+
+    /**
+     * @brief The plug to control.
+     */
     unsigned int plug: 2;
 };
 
+/**
+ * @brief Represents a control packet.
+ */
 typedef struct packet packet_t;
 
+/**
+ * @brief Converts a @ref packet to binary.
+ *
+ * See @ref md_FORMAT for more information.
+ *
+ * @param[in] packet The packet to convert.
+ * @return The binary value of the packet data.
+ */
 unsigned int packet_to_binary(packet_t packet);
+
+/**
+ * @brief Converts binary to a @ref packet.
+ *
+ * See @ref md_FORMAT for more information.
+ *
+ * @param[out] packet The packet value of the binary data.
+ * @param[in] binary The binary value of the packet data.
+ */
 void binary_to_packet(packet_t *packet, unsigned int binary);
+
+/**
+ * @}
+ */
 
 #endif
