@@ -22,6 +22,9 @@
 #include "dynarray.h"
 #include "keyvalue.h"
 
+unsigned int keyvalue_find_key(keyvalue_set_t *set, char *key, int *index);
+unsigned int keyvalue_get_index(keyvalue_set_t *set, int index, keyvalue_pair_t **pair);
+
 unsigned int keyvalue_init(keyvalue_set_t *set, int initial_capacity) {
 	if (set == NULL) {
 		return KEYVALUE_ERROR;
@@ -82,34 +85,23 @@ unsigned int keyvalue_set(keyvalue_set_t *set, char *key, char *value) {
 		return KEYVALUE_ERROR;
 	}
 
-	int size;
 	int index;
-	keyvalue_pair_t *pair;
 
-	if (keyvalue_size(set, &size) != KEYVALUE_SUCCESS) {
+	if (keyvalue_find_key(set, key, &index) != KEYVALUE_SUCCESS) {
 		return KEYVALUE_ERROR;
 	}
 
-	for (index = 0; index < size; index++) {
-		if (dynarray_get(set->array, index, (void **) &pair) != DYNARRAY_SUCCESS) {
-			return KEYVALUE_ERROR;
-		}
-
-		if (strcmp(pair->key, key) == 0) {
-			break;
-		}
-	}
-
-	if (index != (size - 1)) {
-		pair = malloc(sizeof(keyvalue_pair_t));
-
-		pair->key = key;
-		pair->value = value;
-
-		if (keyvalue_add_pair(set, pair) != KEYVALUE_SUCCESS) {
+	if (index == -1) {
+		if (keyvalue_add(set, key, value) != KEYVALUE_SUCCESS) {
 			return KEYVALUE_ERROR;
 		}
 	} else {
+		keyvalue_pair_t *pair;
+
+		if (keyvalue_get_index(set, index, &pair) != KEYVALUE_SUCCESS) {
+			return KEYVALUE_ERROR;
+		}
+
 		pair->value = value;
 
 		if (dynarray_set(set->array, index, pair) != DYNARRAY_SUCCESS) {
@@ -120,13 +112,13 @@ unsigned int keyvalue_set(keyvalue_set_t *set, char *key, char *value) {
 	return KEYVALUE_SUCCESS;
 }
 
-unsigned int keyvalue_get(keyvalue_set_t *set, char *key, char **value) {
+unsigned int keyvalue_find_key(keyvalue_set_t *set, char *key, int *index) {
 	if (set == NULL || key == NULL) {
 		return KEYVALUE_ERROR;
 	}
 
 	int size;
-	int index;
+	int curr;
 	int found = 0;
 	keyvalue_pair_t *pair;
 
@@ -134,22 +126,59 @@ unsigned int keyvalue_get(keyvalue_set_t *set, char *key, char **value) {
 		return KEYVALUE_ERROR;
 	}
 
-	for (index = 0; index < size; index++) {
-		if (dynarray_get(set->array, index, (void **) &pair) != DYNARRAY_SUCCESS) {
+	for (curr = 0; curr < size; curr++) {
+		if (dynarray_get(set->array, curr, (void **) &pair) != DYNARRAY_SUCCESS) {
 			return KEYVALUE_ERROR;
 		}
 
 		if (strcmp(pair->key, key) == 0) {
-			if (value != NULL) {
-				*value = pair->value;
-			}
-
 			found = 1;
 			break;
 		}
 	}
 
-	if (!found) {
+	if (found) {
+		*index = curr;
+	} else {
+		*index = -1;
+	}
+
+	return KEYVALUE_SUCCESS;
+}
+
+unsigned int keyvalue_get(keyvalue_set_t *set, char *key, char **value) {
+	if (set == NULL || key == NULL) {
+		return KEYVALUE_ERROR;
+	}
+
+	int index;
+
+	if (keyvalue_find_key(set, key, &index) != KEYVALUE_SUCCESS) {
+		return KEYVALUE_ERROR;
+	}
+
+	if (index != -1) {
+		keyvalue_pair_t *pair;
+
+		if (keyvalue_get_index(set, index, &pair) != KEYVALUE_SUCCESS) {
+			return KEYVALUE_ERROR;
+		}
+
+		*value = pair->value;
+	} else {
+		return KEYVALUE_ERROR;
+	}
+
+	return KEYVALUE_SUCCESS;
+}
+
+
+unsigned int keyvalue_get_index(keyvalue_set_t *set, int index, keyvalue_pair_t **pair) {
+	if (set == NULL || pair == NULL) {
+		return KEYVALUE_ERROR;
+	}
+
+	if (dynarray_get(set->array, index, (void **) pair) != DYNARRAY_SUCCESS) {
 		return KEYVALUE_ERROR;
 	}
 
@@ -161,31 +190,25 @@ unsigned int keyvalue_remove(keyvalue_set_t *set, char *key) {
 		return KEYVALUE_ERROR;
 	}
 
-	int size;
 	int index;
-	int found = 0;
-	keyvalue_pair_t *pair;
 
-	if (keyvalue_size(set, &size) != KEYVALUE_SUCCESS) {
+	if (keyvalue_find_key(set, key, &index) != KEYVALUE_SUCCESS) {
 		return KEYVALUE_ERROR;
 	}
 
-	for (index = 0; index < size; index++) {
-		if (dynarray_get(set->array, index, (void **) &pair) != DYNARRAY_SUCCESS) {
+	if (index != -1) {
+		keyvalue_pair_t *pair;
+
+		if (keyvalue_get_index(set, index, &pair) != KEYVALUE_SUCCESS) {
 			return KEYVALUE_ERROR;
 		}
 
-		if (strcmp(pair->key, key) == 0) {
-			if (dynarray_remove(set->array, index) != DYNARRAY_SUCCESS) {
-				return KEYVALUE_ERROR;
-			}
+		free(pair);
 
-			found = 1;
-			break;
+		if (dynarray_remove(set->array, index) != DYNARRAY_SUCCESS) {
+			return KEYVALUE_ERROR;
 		}
-	}
-
-	if (!found) {
+	} else {
 		return KEYVALUE_ERROR;
 	}
 
