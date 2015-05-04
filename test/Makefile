@@ -16,7 +16,7 @@
 
 CC     = gcc
 CFLAGS = -Wall -Werror -lcmocka
-OBJ    = src/main.o ../src/packet.o
+OBJ    = src/main.o ../src/packet.o ../src/dynarray.o
 BINARY = test
 
 .PHONY: all build clean test run bin

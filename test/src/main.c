@@ -3,7 +3,12 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+#include <stdlib.h>
+
 #include "../../src/packet.h"
+#include "../../src/dynarray.h"
+
+#define TEST_DYNARRAY(name) cmocka_unit_test_setup_teardown(name, setup_dynarray, teardown_dynarray)
 
 /**
  * @brief Assert that the two given packets are equal.
@@ -66,13 +71,160 @@ static void test_packet_conversion(void **state) {
 	}
 }
 
+static int setup_dynarray(void **state) {
+	dynarray_t *array = malloc(sizeof(dynarray_t));
+
+	assert_true(dynarray_init(array, 8) == DYNARRAY_SUCCESS);
+
+	*state = array;
+
+	return 0;
+}
+
+static int teardown_dynarray(void **state) {
+	dynarray_free(*state);
+	free(*state);
+
+	return 0;
+}
+
+static void test_dynarray_init(void **state) {
+	dynarray_t *array = *state;
+
+	assert_int_equal(array->initial_capacity, array->capacity);
+	assert_int_equal(array->initial_capacity, 8);
+	assert_int_equal(array->size, 0);
+}
+
+static void test_dynarray_size(void **state) {
+	dynarray_t *array = *state;
+
+	int size;
+
+	assert_true(dynarray_size(array, &size) == DYNARRAY_SUCCESS);
+	assert_int_equal(size, 0);
+
+	array->size = 2;
+
+	assert_true(dynarray_size(array, &size) == DYNARRAY_SUCCESS);
+	assert_int_equal(size, 2);
+}
+
+static void test_dynarray_add(void **state) {
+	dynarray_t *array = *state;
+
+	int value = 123;
+
+	assert_true(dynarray_add(array, &value) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->size, 1);
+	assert_int_equal(array->data[0], &value);
+}
+
+static void test_dynarray_resize(void **state) {
+	dynarray_t *array = *state;
+
+	int index;
+	int value = 123;
+
+	for (index = 0; index < array->initial_capacity; index++) {
+		assert_true(dynarray_add(array, &value) == DYNARRAY_SUCCESS);
+	}
+
+	assert_int_equal(array->capacity, array->initial_capacity);
+	assert_int_equal(array->size, array->capacity);
+
+	for (index = 0; index < array->initial_capacity; index++) {
+		assert_true(dynarray_add(array, &value) == DYNARRAY_SUCCESS);
+	}
+
+	assert_int_equal(array->capacity, array->initial_capacity * 2);
+	assert_int_equal(array->size, array->capacity);
+}
+
+static void test_dynarray_set(void **state) {
+	dynarray_t *array = *state;
+
+	int value = 123;
+
+	assert_true(dynarray_add(array, &value) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &value);
+
+	int new_value = 1234;
+
+	assert_true(dynarray_set(array, 0, &new_value) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &new_value);
+}
+
+static void test_dynarray_get(void **state) {
+	dynarray_t *array = *state;
+
+	int value = 123;
+	int *retrieved_value;
+
+	assert_true(dynarray_add(array, &value) == DYNARRAY_SUCCESS);
+	assert_true(dynarray_get(array, 0, (void **) &retrieved_value) == DYNARRAY_SUCCESS);
+	assert_int_equal(value, *retrieved_value);
+}
+
+static void test_dynarray_remove(void **state) {
+	dynarray_t *array = *state;
+
+	int first_value = 123;
+	int second_value = 456;
+
+	assert_true(dynarray_add(array, &first_value) == DYNARRAY_SUCCESS);
+	assert_true(dynarray_add(array, &second_value) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &first_value);
+	assert_int_equal(array->data[1], &second_value);
+	assert_int_equal(array->size, 2);
+
+	assert_true(dynarray_remove(array, 0) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &second_value);
+	assert_int_equal(array->size, 1);
+
+	assert_true(dynarray_add(array, &first_value) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &second_value);
+	assert_int_equal(array->data[1], &first_value);
+	assert_int_equal(array->size, 2);
+
+	assert_true(dynarray_remove(array, 1) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data[0], &second_value);
+	assert_int_equal(array->size, 1);
+}
+
+static void test_dynarray_free(void **state) {
+	dynarray_t *array = *state;
+
+	assert_true(dynarray_free(array) == DYNARRAY_SUCCESS);
+	assert_int_equal(array->data, NULL);
+	assert_int_equal(array->capacity, 0);
+	assert_int_equal(array->size, 0);
+}
+
 int main(void) {
 
-	// A list of all the tests to be done
+	// A list of tests to be done
 	const struct CMUnitTest tests[] = {
-		cmocka_unit_test(test_packet_conversion) // Packet conversion test (original->binary->cloned)
+		cmocka_unit_test(test_packet_conversion), // Packet conversion test (original->binary->cloned)
 	};
 
-	// Run the tests and return the number of failed tests
-	return cmocka_run_group_tests(tests, NULL, NULL);
+	// A list of dynarray tests to be done
+	const struct CMUnitTest dynarray_tests[] = {
+		TEST_DYNARRAY(test_dynarray_init),
+		TEST_DYNARRAY(test_dynarray_size),
+		TEST_DYNARRAY(test_dynarray_add),
+		TEST_DYNARRAY(test_dynarray_resize),
+		TEST_DYNARRAY(test_dynarray_set),
+		TEST_DYNARRAY(test_dynarray_get),
+		TEST_DYNARRAY(test_dynarray_remove),
+		TEST_DYNARRAY(test_dynarray_free)
+	};
+
+	// Run the tests and store the number of failed tests
+	int failed = cmocka_run_group_tests(tests, NULL, NULL);
+
+	// Run the dynarray tests and store the number of failed tests
+	int dynarray_failed = cmocka_run_group_tests(dynarray_tests, NULL, NULL);
+
+	return (failed + dynarray_failed);
 }
