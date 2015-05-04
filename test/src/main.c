@@ -7,8 +7,10 @@
 
 #include "../../src/packet.h"
 #include "../../src/dynarray.h"
+#include "../../src/keyvalue.h"
 
 #define TEST_DYNARRAY(name) cmocka_unit_test_setup_teardown(name, setup_dynarray, teardown_dynarray)
+#define TEST_KEYVALUE(name) cmocka_unit_test_setup_teardown(name, setup_keyvalue, teardown_keyvalue)
 
 /**
  * @brief Assert that the two given packets are equal.
@@ -201,6 +203,147 @@ static void test_dynarray_free(void **state) {
 	assert_int_equal(array->size, 0);
 }
 
+static int setup_keyvalue(void **state) {
+	keyvalue_set_t *set = malloc(sizeof(keyvalue_set_t));
+
+	assert_true(keyvalue_init(set, 8) == KEYVALUE_SUCCESS);
+
+	*state = set;
+
+	return 0;
+}
+
+static int teardown_keyvalue(void **state) {
+	keyvalue_free(*state);
+	free(*state);
+
+	return 0;
+}
+
+static void test_keyvalue_init(void **state) {
+	keyvalue_set_t *set = *state;
+	dynarray_t *array = set->array;
+
+	assert_int_equal(array->initial_capacity, array->capacity);
+	assert_int_equal(array->initial_capacity, 8);
+	assert_int_equal(array->size, 0);
+}
+
+static void test_keyvalue_size(void **state) {
+	keyvalue_set_t *set = *state;
+
+	int size;
+
+	assert_true(keyvalue_size(set, &size) == KEYVALUE_SUCCESS);
+	assert_int_equal(size, 0);
+
+	set->array->size = 2;
+
+	assert_true(keyvalue_size(set, &size) == KEYVALUE_SUCCESS);
+	assert_int_equal(size, 2);
+}
+
+static void test_keyvalue_add_pair(void **state) {
+	keyvalue_set_t *set = *state;
+	dynarray_t *array = set->array;
+
+	keyvalue_pair_t pair;
+
+	pair.key = "hello";
+	pair.value = "world";
+
+	assert_true(keyvalue_add_pair(set, &pair) == KEYVALUE_SUCCESS);
+	assert_int_equal(array->size, 1);
+	assert_int_equal(array->data[0], &pair);
+}
+
+static void test_keyvalue_add(void **state) {
+	keyvalue_set_t *set = *state;
+	dynarray_t *array = set->array;
+
+	char *key = "hello";
+	char *value = "world";
+
+	assert_true(keyvalue_add(set, key, value) == KEYVALUE_SUCCESS);
+	assert_int_equal(array->size, 1);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, value);
+}
+
+static void test_keyvalue_set(void **state) {
+	keyvalue_set_t *set = *state;
+	dynarray_t *array = set->array;
+
+	char *key = "hello";
+	char *value = "earth";
+
+	assert_true(keyvalue_add(set, key, value) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, value);
+
+	char *new_value = "pluto";
+
+	assert_true(keyvalue_set(set, key, new_value) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, new_value);
+}
+
+static void test_keyvalue_get(void **state) {
+	keyvalue_set_t *set = *state;
+
+	char *key = "hello";
+	char *value = "world";
+
+	char *retrieved_value;
+
+	assert_true(keyvalue_add(set, key, value) == KEYVALUE_SUCCESS);
+	assert_true(keyvalue_get(set, key, &retrieved_value) == KEYVALUE_SUCCESS);
+	assert_int_equal(value, retrieved_value);
+}
+
+static void test_keyvalue_remove(void **state) {
+	keyvalue_set_t *set = *state;
+	dynarray_t *array = set->array;
+
+	char *first_key = "hello";
+	char *first_value = "earth";
+
+	char *second_key = "goodbye";
+	char *second_value = "pluto";
+
+	assert_true(keyvalue_add(set, first_key, first_value) == KEYVALUE_SUCCESS);
+	assert_true(keyvalue_add(set, second_key, second_value) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, first_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, first_value);
+	assert_int_equal(((keyvalue_pair_t *) array->data[1])->key, second_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[1])->value, second_value);
+	assert_int_equal(array->size, 2);
+
+	assert_true(keyvalue_remove(set, first_key) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, second_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, second_value);
+	assert_int_equal(array->size, 1);
+
+	assert_true(keyvalue_add(set, first_key, first_value) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, second_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, second_value);
+	assert_int_equal(((keyvalue_pair_t *) array->data[1])->key, first_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[1])->value, first_value);
+	assert_int_equal(array->size, 2);
+
+	assert_true(keyvalue_remove(set, first_key) == KEYVALUE_SUCCESS);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->key, second_key);
+	assert_int_equal(((keyvalue_pair_t *) array->data[0])->value, second_value);
+	assert_int_equal(array->size, 1);
+}
+
+static void test_keyvalue_free(void **state) {
+	keyvalue_set_t *set = *state;
+
+	assert_true(keyvalue_free(set) == KEYVALUE_SUCCESS);
+	assert_int_equal(set->array, NULL);
+}
+
 int main(void) {
 
 	// A list of tests to be done
@@ -213,7 +356,15 @@ int main(void) {
 		TEST_DYNARRAY(test_dynarray_set),
 		TEST_DYNARRAY(test_dynarray_get),
 		TEST_DYNARRAY(test_dynarray_remove),
-		TEST_DYNARRAY(test_dynarray_free)
+		TEST_DYNARRAY(test_dynarray_free),
+		TEST_KEYVALUE(test_keyvalue_init),
+		TEST_KEYVALUE(test_keyvalue_size),
+		TEST_KEYVALUE(test_keyvalue_add_pair),
+		TEST_KEYVALUE(test_keyvalue_add),
+		TEST_KEYVALUE(test_keyvalue_set),
+		TEST_KEYVALUE(test_keyvalue_get),
+		TEST_KEYVALUE(test_keyvalue_remove),
+		TEST_KEYVALUE(test_keyvalue_free)
 	};
 
 	// Run the tests and return the number of failed tests
