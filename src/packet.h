@@ -16,6 +16,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @file packet.h
+ */
+
 #ifndef _PACKET_H_
 #define _PACKET_H_
 
