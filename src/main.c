@@ -24,7 +24,7 @@
 #include "packet.h"
 #include "serial.h"
 
-#define BUILD_VERSION "0.0.5"
+#define BUILD_VERSION "0.0.6"
 
 // The name of the current file
 static char *filename = "Unknown";
