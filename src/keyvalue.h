@@ -42,7 +42,9 @@ unsigned int keyvalue_size(keyvalue_set_t *set, int *size);
 unsigned int keyvalue_add_pair(keyvalue_set_t *set, keyvalue_pair_t *pair);
 unsigned int keyvalue_add(keyvalue_set_t *set, char *key, char *value);
 unsigned int keyvalue_set(keyvalue_set_t *set, char *key, char *value);
+unsigned int keyvalue_find_key(keyvalue_set_t *set, char *key, int *index);
 unsigned int keyvalue_get(keyvalue_set_t *set, char *key, char **value);
+unsigned int keyvalue_get_index(keyvalue_set_t *set, int index, keyvalue_pair_t **pair);
 unsigned int keyvalue_remove(keyvalue_set_t *set, char *key);
 unsigned int keyvalue_free(keyvalue_set_t *set);
 

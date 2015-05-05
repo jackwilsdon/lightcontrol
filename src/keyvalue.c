@@ -22,9 +22,6 @@
 #include "dynarray.h"
 #include "keyvalue.h"
 
-unsigned int keyvalue_find_key(keyvalue_set_t *set, char *key, int *index);
-unsigned int keyvalue_get_index(keyvalue_set_t *set, int index, keyvalue_pair_t **pair);
-
 unsigned int keyvalue_init(keyvalue_set_t *set, int initial_capacity) {
 	if (set == NULL) {
 		return KEYVALUE_ERROR;
