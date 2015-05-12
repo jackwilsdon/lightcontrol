@@ -66,7 +66,7 @@ struct dynarray {
 };
 
 /**
- * @brief Represents a dynamically sized array
+ * @brief Represents a dynamically sized array.
  */
 typedef struct dynarray dynarray_t;
 
