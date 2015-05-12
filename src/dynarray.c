@@ -21,7 +21,7 @@
 #include "dynarray.h"
 
 unsigned int dynarray_init(dynarray_t *array, int initial_capacity) {
-	if (array == NULL || initial_capacity < 1 || (initial_capacity % 2) != 0) {
+	if (array == NULL) {
 		return DYNARRAY_ERROR;
 	}
 
@@ -32,7 +32,7 @@ unsigned int dynarray_init(dynarray_t *array, int initial_capacity) {
 	}
 
 	array->data = data;
-	array->initial_capacity = initial_capacity;
+	array->initial_capacity = initial_capacity > 0 ? initial_capacity : 8;
 	array->capacity = initial_capacity;
 	array->size = 0;
 

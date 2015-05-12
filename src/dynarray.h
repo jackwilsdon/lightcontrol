@@ -83,6 +83,8 @@ typedef void (*dynarray_free_func_t)(void *);
  *  - Sets the initial capacity and current capacity to the capacity provided.
  *  - Sets the size to zero.
  *
+ * If the capacity provided is zero, @ref dynarray#initial_capacity "initial_capacity" is set to 8.
+ *
  * This method should not be called on an existing array, instead the array
  * should be @ref dynarray_free "freed" first.
  *
