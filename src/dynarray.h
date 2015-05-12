@@ -71,6 +71,11 @@ struct dynarray {
 typedef struct dynarray dynarray_t;
 
 /**
+ * @brief Represents a function used to free elements of a @ref dynarray "dynamically sized array".
+ */
+typedef void (*dynarray_free_func_t)(void *);
+
+/**
  * @brief Initializes a @ref dynarray "dynamically sized array".
  *
  * This method performs the following actions on the provided array
