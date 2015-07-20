@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 CC     = gcc
-CFLAGS = -Wall -Werror -lcmocka
+CFLAGS = -Wall -Werror -lcmocka -static
 OBJ    = src/main.o ../src/packet.o
 BINARY = test
 
