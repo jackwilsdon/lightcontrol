@@ -16,24 +16,25 @@
 
 CC     = gcc
 CFLAGS = -Wall -Werror
+
+SRCDIR = src
+BINDIR = bin
+OBJDIR = obj
+DEPDIR = deps
+
 OBJ    = main.o serial_win.o serial_linux.o serial_debug.o packet.o
 BINARY = control
+
+BINFILE = $(addprefix $(BINDIR)/, $(BINARY))
 
 .PHONY: all build debug clean install uninstall control test bin
 
 all: build
 
-build: control
+build: $(BINFILE)
 
 debug: CFLAGS += -DDEBUG_SERIAL
-debug: BINARY = control_debug
-debug: control
-
-bin/%.o: src/%.c | bin
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-clean:
-	rm -rf bin
+debug: build
 
 install: control
 ifeq ($(OS), Windows_NT)
@@ -49,11 +50,17 @@ else
 	rm /usr/local/bin/$(BINARY)
 endif
 
-control: $(addprefix bin/, $(OBJ))
-	gcc -o bin/$(BINARY) $^ $(CFLAGS)
+clean:
+	rm -rf $(BINDIR) $(OBJDIR) $(DEPDIR)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(BINDIR) $(OBJDIR) $(DEPDIR)
+	$(CC) -c $(CFLAGS) -MMD -MP -MF $(addprefix $(DEPDIR)/, $(notdir $(patsubst %.c,%.d,$<))) -o $(addprefix $(OBJDIR)/, $(notdir $@)) $<
+
+$(BINFILE): $(addprefix $(OBJDIR)/, $(OBJ)) | $(BINDIR)
+	$(CC) $(CFLAGS) -o $@ $(addprefix $(OBJDIR)/, $(notdir $^))
+
+$(BINDIR) $(OBJDIR) $(DEPDIR):
+	@mkdir -p $@
 
 test:
 	make -C test build run
-
-bin:
-	mkdir -p bin
