@@ -27,7 +27,7 @@ BINARY = control
 
 BINFILE = $(addprefix $(BINDIR)/, $(BINARY))
 
-.PHONY: all build debug clean install uninstall control test bin
+.PHONY: all build debug install uninstall clean test
 
 all: build
 
