@@ -1,4 +1,11 @@
 # Changelog
+## `0.0.6`
+ - Require device argument on command line
+ - Fix bug in command line where errors are overwritten by other errors
+ - Compile tests against cmocka statically
+ - Update Makefile
+ - Add packet format documentation
+
 ## `0.0.5`
  - Improve code documentation
  - Add unit test for packet parsing
