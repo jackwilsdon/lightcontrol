@@ -36,7 +36,7 @@
     #define serial_connect win_serial_connect
     #define serial_transmit win_serial_transmit
     #define serial_close win_serial_close
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
     #include "serial_linux.h"
 
     #define serial_connect linux_serial_connect

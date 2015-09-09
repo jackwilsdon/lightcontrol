@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 #include "serial.h"
 #include "packet.h"
