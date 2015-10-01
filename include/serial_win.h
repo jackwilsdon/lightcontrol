@@ -19,7 +19,7 @@
 #ifndef _SERIAL_WIN_H_
 #define _SERIAL_WIN_H_
 
-#include "packet.h"
+#include "packet/packet.h"
 
 unsigned int win_serial_connect(char device[]);
 unsigned int win_serial_transmit(packet_t packet);

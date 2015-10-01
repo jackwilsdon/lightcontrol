@@ -21,7 +21,7 @@
 #include <libgen.h>
 #include <getopt.h>
 
-#include "packet.h"
+#include "packet/packet.h"
 #include "serial.h"
 
 #define BUILD_VERSION "0.0.6"

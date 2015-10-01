@@ -19,7 +19,7 @@
 #if defined(__linux__) || defined(__APPLE__)
 
 #include "serial.h"
-#include "packet.h"
+#include "packet/packet.h"
 
 #include <fcntl.h>
 #include <unistd.h>

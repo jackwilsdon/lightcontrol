@@ -16,13 +16,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _SERIAL_DEBUG_H_
-#define _SERIAL_DEBUG_H_
+#ifndef _SERIAL_LINUX_H_
+#define _SERIAL_LINUX_H_
 
-#include "packet.h"
+#include "packet/packet.h"
 
-unsigned int debug_serial_connect(char device[]);
-unsigned int debug_serial_transmit(packet_t packet);
-unsigned int debug_serial_close();
+unsigned int linux_serial_connect(char device[]);
+unsigned int linux_serial_transmit(packet_t packet);
+unsigned int linux_serial_close();
 
 #endif

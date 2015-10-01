@@ -19,7 +19,7 @@
 #ifdef _WIN32
 
 #include "serial.h"
-#include "packet.h"
+#include "packet/packet.h"
 
 #include <windows.h>
 #include <stdlib.h>

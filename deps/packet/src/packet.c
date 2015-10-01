@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "packet.h"
+#include "packet/packet.h"
 
 unsigned int packet_to_binary(packet_t packet) {
     unsigned int binary = (packet.status << 7);

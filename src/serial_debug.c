@@ -22,7 +22,7 @@
 #include <stdarg.h>
 
 #include "serial.h"
-#include "packet.h"
+#include "packet/packet.h"
 
 const char *debug_prefix = "[Debug] ";
 
