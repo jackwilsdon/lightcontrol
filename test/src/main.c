@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "../../src/packet.h"
+#include "packet/packet.h"
 
 /**
  * @brief Assert that the two given packets are equal.
