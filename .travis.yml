@@ -10,4 +10,10 @@ install:
     - sudo make install
     - cd ../..
     - rm -rf cmocka-1.0.1
-script: make test
+script:
+    - cd test
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ./bin/run_tests
