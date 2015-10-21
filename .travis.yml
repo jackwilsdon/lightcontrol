@@ -29,5 +29,5 @@ script:
     - mkdir -p build
     - cd build
     - cmake -DCMOCKA_ROOT_DIR=cmocka ..
-    - make VERBOSE=1
+    - make
     - ./bin/run_tests
