@@ -1,4 +1,9 @@
 # Changelog
+## `0.0.7`
+ - Add basic [README](/README.md)
+ - Use CMake to compile control project and tests
+ - Allow compilation on OS X
+
 ## `0.0.6`
  - Require device argument on command line
  - Fix bug in command line where errors are overwritten by other errors
