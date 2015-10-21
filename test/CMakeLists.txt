@@ -24,4 +24,4 @@ find_package(CMocka)
 include_directories(${CMOCKA_INCLUDE_DIR})
 
 # Add dependencies
-target_link_libraries(run_tests packet cmocka)
+target_link_libraries(run_tests packet ${CMOCKA_LIBRARY})
