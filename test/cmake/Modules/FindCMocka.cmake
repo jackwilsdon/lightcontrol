@@ -9,7 +9,7 @@
 #  CMOCKA_FOUND - system has CMocka
 #  CMOCKA_INCLUDE_DIRS - the CMocka include directories
 #  CMOCKA_INCLUDE_DIR - for backwards compatiblity, the same as CMOCKA_INCLUDE_DIRS
-#  CMOCKA_LIBRARIES - Link these to use CMocka
+#  CMOCKA_LIBRARY - CMocka library location
 #  CMOCKA_DEFINITIONS - Compiler switches required for using CMocka
 #
 
