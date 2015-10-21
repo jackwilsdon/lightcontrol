@@ -17,6 +17,8 @@ install:
     - mkdir build
     - cd build
     - cmake -DCMAKE_INSTALL_PREFIX=../../cmocka -DCMAKE_BUILD_TYPE=Debug -DWITH_STATIC_LIB=1 ..
+    - ls ../../
+    - ls ../../cmocka
     - make install
     - cd ../..
     - rm -rf cmocka-1.0.1
