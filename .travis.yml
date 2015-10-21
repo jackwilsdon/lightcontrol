@@ -1,19 +1,29 @@
-sudo: required
 language: c
+
+addons:
+    apt:
+        sources:
+            - kubuntu-backports
+        packages:
+            - cmake
+
+before_install: cmake --version
+
 install:
     - wget https://cmocka.org/files/1.0/cmocka-1.0.1.tar.xz
     - tar xvf cmocka-1.0.1.tar.xz
     - cd cmocka-1.0.1
     - mkdir build
     - cd build
-    - cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug -DWITH_STATIC_LIB=1 ..
-    - sudo make install
+    - cmake -DCMAKE_INSTALL_PREFIX=../../cmocka -DCMAKE_BUILD_TYPE=Debug -DWITH_STATIC_LIB=1 ..
+    - make install
     - cd ../..
     - rm -rf cmocka-1.0.1
+
 script:
     - cd test
     - mkdir build
     - cd build
-    - cmake ..
+    - cmake -DCMOCKA_ROOT_DIR=cmocka ..
     - make
     - ./bin/run_tests
