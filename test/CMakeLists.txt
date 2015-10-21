@@ -20,9 +20,8 @@ add_executable(run_tests ${test_SOURCES})
 # Find CMocka
 find_package(CMocka)
 
-# Include CMocka and add definitions
+# Include CMocka
 include_directories(${CMOCKA_INCLUDE_DIR})
-add_definitons(${CMOCKA_DEFINITIONS})
 
 # Add dependencies
 target_link_libraries(run_tests packet cmocka)
