@@ -7,7 +7,8 @@
 #
 # Read-Only variables:
 #  CMOCKA_FOUND - system has CMocka
-#  CMOCKA_INCLUDE_DIR - the CMocka include directory
+#  CMOCKA_INCLUDE_DIRS - the CMocka include directories
+#  CMOCKA_INCLUDE_DIR - for backwards compatiblity, the same as CMOCKA_INCLUDE_DIRS
 #  CMOCKA_LIBRARIES - Link these to use CMocka
 #  CMOCKA_DEFINITIONS - Compiler switches required for using CMocka
 #
@@ -16,7 +17,7 @@ include(FindPackageHandleStandardArgs)
 
 set(CMOCKA_ROOT_DIR ${CMOCKA_ROOT_DIR} CACHE PATH "Root installation directory of CMocka")
 
-find_path(CMOCKA_INCLUDE_DIR
+find_path(CMOCKA_INCLUDE_DIRS
   NAMES cmocka.h
   PATHS ${CMOCKA_ROOT_DIR}/include
   NO_DEFAULT_PATH
@@ -28,8 +29,7 @@ find_library(CMOCKA_LIBRARY
   NO_DEFAULT_PATH
 )
 
-message(STATUS "CMOCKA_INCLUDE_DIR = " ${CMOCKA_INCLUDE_DIR})
-message(STATUS "CMOCKA_LIBRARY = " ${CMOCKA_LIBRARY})
+set(CMOCKA_INCLUDE_DIR ${CMOCKA_INCLUDE_DIRS})
 
 find_package_handle_standard_args(CMocka DEFAULT_MSG CMOCKA_LIBRARY CMOCKA_INCLUDE_DIR)
 
